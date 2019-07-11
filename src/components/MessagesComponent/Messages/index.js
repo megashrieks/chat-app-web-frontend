@@ -1,4 +1,4 @@
-import React,{ Fragment } from 'react';
+import React from 'react';
 export default ({ messages }) => {
     return messages.map((message, index) => {
         console.log(message)
