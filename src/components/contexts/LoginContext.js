@@ -15,6 +15,7 @@ let LoginProvider =  ({ children }) => {
     });
     return <Context.Provider value={{
         token,
+        changeToken,
         doLogin
     }}>
         {children}

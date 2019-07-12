@@ -2,6 +2,9 @@ import React, { useState, useContext,useEffect } from 'react';
 import { Context } from '../contexts/LoginContext';
 import Messages from './Messages/'
 import io from 'socket.io-client';
+import { CustomInput } from "../library/CustomInput"
+import { Button } from "../library/Button"
+
 let socket;
 export default () => {
     let context = useContext(Context);
@@ -17,8 +20,8 @@ export default () => {
             console.log("sending register_connections")
             socket.emit("register_connection", { token: context.token });
             socket.on("message", data => { 
-                console.log(data)
-                changeMessages(messages => ([...messages,...data.messages]))
+                changeMessages(messages => ([...messages, ...data.messages]))
+                changeTo(data.messages[0] ? data.messages[0].from : "")
              });
             socket.on("acknowledgement", console.log)
             changeMessages([]);
@@ -27,11 +30,20 @@ export default () => {
             }
         }
     }, [context.token]);
-    return context.token ? <div>
-        <Messages messages={messages}/>
-        <input value={to} onChange={({ target: { value } }) => { changeTo(value) }} />
-        <br/>
-        <input value={text} onChange={({ target: { value } }) => { changeText(value) }} />
-        <button onClick={sendMessages}>Send</button>
-    </div> : "Login to continue"
+    return <div className = "cui">
+        <Messages messages={messages} to={to} changeTo={changeTo} />
+        <div className = "send-options">
+            <CustomInput
+                label="to"
+                style={{ width: "40%" }}
+                defaultValue={to}
+                watcher={changeTo} />
+            <CustomInput
+                label="message"
+                style={{width:"40%"}}
+                defaultValue={text}
+                watcher={changeText} />
+            <Button size="small" color="info" onClick={sendMessages}>Send</Button>
+        </div>
+    </div>
 }

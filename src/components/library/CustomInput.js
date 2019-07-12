@@ -19,10 +19,14 @@ class CustomInput extends Component {
         });
         fn && fn(value);
     };
+    componentWillReceiveProps(newProps) {
+        if (newProps.defaultValue != this.state.value) 
+            this.setState({ value: newProps.defaultValue });
+    }
     render() {
         var errorclass = !!this.props.error ? " error" : "";
         return (
-            <label className={"custom-input" + errorclass}>
+            <label className={"custom-input" + errorclass} style={this.props.style}>
                 <input
                     {...this.state}
                     disabled={!!this.props.disabled}
